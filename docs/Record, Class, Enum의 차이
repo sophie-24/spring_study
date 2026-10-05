@@ -1,0 +1,45 @@
+## [1] Record란?
+- 데이터를 담기 위한 불변 데이터 전용 클래스..
+- 환율 정보처럼 "오직 데이터를 읽기 위해 값을 전달하는 목적"으로 클래스를 만들 때,
+불필요하게 반복되는 코드를 획기적으로 줄여주는 문법
+
+### 특징
+1. 생성자, getter, equals(), hashCode(), toString()을 자바가 자동으로 생성해줌
+2. 필드는 기본적으로 private final 이어서 값을 변경할 수 없음 (불변성)
+
+### 코드로 비교..
+// 기존 클래스로 만들 때 (장황한 보일러플레이트 코드 필요)
+public final class ExRateData {
+    private final String currency;
+    private final BigDecimal rate;
+    // 생성자, getter, equals, hashCode, toString 직접 구현 필요...
+}
+
+// record로 만들 때 (이 한 줄로 끝!)
+public record ExRateData(String currency, BigDecimal rate) {}
+
+
+## [2] Record vs Enum vs 일반 Class 비교
+### 1. 일반 클래스
+(1) 주요 목적 : 로직과 상태를 한께 관리하는 일반적인 객체
+(2) 값의 변경 : 가능 또는 불가능 중 선택할 수 있음
+(3) 자동 생성 : 없음 (직접 작성하거나 룸복 사용)
+(4) 대표적 예시 : 서비스 클래스, 컨트롤러, 회원 관리 객체
+
+### 2. 레코드 (record)
+(1) 주요 목적 : 순수하게 데이터를 담아서 운반하는 객체
+(2) 값의 변경 : 불변 (생성 후에 변경 불가)
+(3) 자동 생성 : 생성자, getter, equals 등 자동 생성
+(4) 대표 예시 : API 응답 데이터 (ExRateData), DTO
+
+### 3. 열거형 (enum)
+(1) 주요 목적 : 미리 정의된 상수들의 합을 표현
+(2) 값의 변경 : 불변 (고정된 상수)
+(3) 자동 생성 : 상수 목록, name(), ordinal() 등 제공
+(4) 대표 예시 : 요일(monday), 상태 코드(Success, fail 등)
+
+## [3] 결론
+- Class : 기능 (메서드)과 상태(데이터)가 복잡하게 얽혀 있는 일반적인 프로그램 부품을 만들 때
+- Record : 외부 API 응답이나 데이터베이스에서 가져온 데이터 뭉치를 안전하고 간결하게 담고 싶을 때
+(Getter를 data.currency() 형태로 바로 쓸 수 있어 아주 편함)
+- Enum : "이 안에는 딱 지정된 값들만 들어와야 해!" 하는 선택지나 상태 목록(예: 성공/실패, 권한 등)을 정의할 때
